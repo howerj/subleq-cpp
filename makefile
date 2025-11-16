@@ -1,4 +1,4 @@
-CXXFLAGS=-Wall -Wextra -fwrapv
+CXXFLAGS=-Wall -Wextra -fwrapv -O3
 TARGET=subleq
 IMAGE=subleq.dec
 

@@ -14,29 +14,35 @@ public:
 			m[i] = 0;
 	}
 
-	void run() {
-		for (int pc = 0; pc >= 0;) {
-			const T a = m[pc++]; 
-			const T b = m[pc++]; 
-			const T c = m[pc++];
+	int run() {
+		const size_t L = m.capacity();
+		for (size_t pc = 0; pc < L;) {
+			const T a = m[pc++ % L]; 
+			const T b = m[pc++ % L]; 
+			const T c = m[pc++ % L];
 			if (a == -1) {
-				m[b] = get();
+				m[((unsigned)b) % L] = get();
 			} else if (b == -1) {
-				put(m[a]);
+				if (put(m[((unsigned)a) % L]) < 0)
+					return -1;
 			} else {
-				const T r = m[b] - m[a];
-				m[b] = r;
+				const T r = m[((unsigned)b) % L] - m[((unsigned)a) % L];
+				m[((unsigned)b) % L] = r;
 				if (r <= 0) 
 					pc = c;
 			}
 		}
+		return 0;
 	}
 
-	void load(std::string file) {
+	int load(std::string file) {
 		std::ifstream fh(file.c_str(), std::ios_base::in);
+		if (!fh)
+			return -1;
 		std::istream_iterator<T> i_v, i_f(fh);
 		std::copy(i_f, i_v, std::back_inserter(m));
 		fh.close();
+		return 0;
 	}
 
 private:
@@ -55,9 +61,11 @@ private:
 		return _in.eof(); 
 	}
 
-	void put(int ch) { 
-		_out << static_cast<char>(ch);
+	int put(int ch) { 
+		if (!(_out << static_cast<char>(ch)))
+			return -1;
 		_out.flush();
+		return 0;
 	}
 };
 

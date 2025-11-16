@@ -3,7 +3,7 @@
 int main(int argc, char *argv[]) {
 	Subleq<short> s;
 	for (int i = 1; i < argc; i++)
-		s.load(argv[i]);
-	s.run();
-	return 0;
+		if (s.load(argv[i]) < 0)
+			return 1;
+	return s.run() < 0;
 }
